@@ -24,17 +24,21 @@
 			height: 160px;
 			object-fit: cover;
 		}
+		.missle {
+			width: 8px;
+			height: 10px;
+			background-color: purple;
+			position: absolute;
+
+		}
 
 	</style>
 
 	<div id="ocean">
-		<div id="players">
-				
-			</div>
-			<div id="enemies">
-				<div class="enemy"></div>
-			</div>
-		</div>
+		<div id="players"></div>
+		<div id="enemies"></div>
+		<div id="missles"></div>
+</div>
 
 		<script> type="text/javascript"
 			
@@ -42,6 +46,9 @@
 				left: 450,
 				top: 620
 			}
+
+			var missles = [];
+
 
 			var enemies = [
 				{ left: 350, top: 200 },
@@ -60,12 +67,22 @@
 			function drawEnemies() {
 				content = "";
 				for (var i = 0; i < enemies.length; i++) {
-					content += `<div class="enemy" style = "left:${enemies[i].left}px; top: ${enemies[i].top}px" ></div >`
-					document.getElementById("enemies").innerHTML = content;
+					content += `<div class="enemy" style="left: ${enemies[i].left}px; top: ${enemies[i].top}px"></div>`
+					
 				}
+				document.getElementById("enemies").innerHTML = content;
 			}
-			drawPlayer();
-			drawEnemies();
+
+			function drawMissles() {
+					content = "";
+
+					for (var i = 0; i < missles.length; i++) {
+						content += `<div class="missle" style="left: ${missles[i].left}px; top: ${missles[i].top}px"></div>`
+						
+					}
+					document.getElementById("missles").innerHTML = content;
+				}
+			
 
 			document.onkeydown = function(e) {
 				console.log(e);
@@ -82,14 +99,40 @@
 				if (e.keyCode == 40 && player.top < 620) {
 					player.top = player.top + 10;
 				}
+				if (e.keyCode == 32) {
+					missles.push({left: (player.left + 34), top: (player.top - 8)})
+					drawMissles();
+				}
 				drawPlayer();
+				
 			}
+			
+		function moveMissles() {
+			for (var i = 0; i < missles.length; i++) {
+				missles[i].top = missles[i].top - 25;
+			}
+		}
+
+		function moveEnemies() {
+			for (var i = 0; i < enemies.length; i++) {
+				enemies[i].top = enemies[i].top + 5
+			}
+		}
+
+		
+
+		function gameLoop() {
+			drawPlayer()
+			moveEnemies();
+			drawEnemies();
+			moveMissles();
+			drawMissles();
+			setTimeout(gameLoop, 100)
+
+		}
+			gameLoop();
 		</script>
 
 
-	<script type="text/javascript">
-	
-
-	</script>
 </body>
 </html>
